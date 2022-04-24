@@ -2,19 +2,23 @@ import numpy as np
 
 def d(S, T, F):
     res = 0
+    inc = 0
     for i in S:
         for j in T:
             if(F[i][j] == 1):
-                res += 1
-    res -= S.size + T.size
-
+                inc += 1
+    res = inc - S.size - T.size
+    ##print("!!!!")
+    ##print(inc)
+    ##print(S.size + T.size)
+    ##print("!!!!")
     return res
 
 
 def main():
     U = np.array([0, 1, 2], dtype=int)
     L = np.array([0, 1, 2, 3, 4], dtype=int)
-    E = np.array([[1, 1, 1, 0, 0],[1, 1, 1, 1, 1], [0, 0, 0, 1, 1]], dtype=int)
+    E = np.array([[1, 1, 1, 0, 0],[1, 1, 1, 1, 1], [0, 0, 1, 1, 1]], dtype=int)
     ec = np.array([],dtype=int)
 
     F = np.copy(E)
@@ -38,13 +42,15 @@ def main():
             S = np.append(S, u)
             T_copy = np.copy(T);
             T = np.array([], dtype=int)
+
             cnt = 0
             for tail in E[u]:
-                if(tail == 1):
-                    T = np.append(T, L[cnt])
-                    cnt += 1
+                if(tail == 1 and (cnt in T_copy)):
+                    T = np.append(T, cnt)
+                cnt += 1
 
             print(k+1)
+            print(E[u])
             print(S)
             print(T)
             print(d(S, T, F)) 
@@ -54,22 +60,21 @@ def main():
                 S_max = np.copy(S)
                 T_max = np.copy(T)
             
-            if(d(S_max, T_max, F) >= 0):
+        if(d(S_max, T_max, F) >= 0):
+         
+        
 
                 #Fから完全二部グラフS_max × T_maxのエッジを削除
-                for i in S_max:
-                    for j in T_max:
-                        F[i][j] = 0
-                ec = np.append(ec, [S_max, T_max])
-                R = np.copy(U)
-            else:
-                R = np.delete(R, 0)
+            for i in S_max:
+                for j in T_max:
+                    F[i][j] = 0
+            ec = np.append(ec, [S_max, T_max])
+            R = np.copy(U)
+        else:
+            R = np.delete(R, 0)
             
-
-
-            
-            if(R.size == 0):
-                break
+        if(R.size == 0):
+            break
     
     print(ec)
 
