@@ -21,18 +21,25 @@ def main():
 
 
         ##Rの頂点セットからRに連結しているエッジ数が多い順にソートする
+        R = sorted(R)
+
 
         for u in R:
             S = np.append(S, u)
-            T = np.append(T, u)
+            T = np.array([])
+            cnt = 0
+            for tail in E[u]:
+                if(tail == 1):
+                    T = np.append(T, L[cnt])
+                    cnt += 1
 
             if(d(S, T) > d(S_max, T_max)):
-                Smax = np.copy(S)
-                Tmax = np.copy(T)
+                S_max = np.copy(S)
+                T_max = np.copy(T)
             
             if(d(S_max, T_max) >= 0):
-                F = 1
-                ec = ec.append(1)
+                F = F / S_max * T_max
+                ec = ec.append([S_max, T_max])
                 R = np.copy(U)
             else:
                 R = np.delete(R, 0)
